@@ -1,32 +1,34 @@
-def merge_sort(items):
-  if len(items) <= 1:
-    return items
+def sort_list(unsorted_list: list[int]) -> list[int]:
+    n = len(unsorted_list)
 
-  middle_index = len(items) // 2
-  left_split = items[:middle_index]
-  right_split = items[middle_index:]
+    # Base case: A list of size 1 or 0 is already sorted
+    if n <= 1:
+        return unsorted_list
 
-  left_sorted = merge_sort(left_split)
-  right_sorted = merge_sort(right_split)
+    # Split the list into left and right halves
+    midpoint = n // 2
+    left_list = sort_list(unsorted_list[:midpoint])
+    right_list = sort_list(unsorted_list[midpoint:])
 
-  return merge(left_sorted, right_sorted)
+    result_list = []
+    left_pointer, right_pointer = 0, 0
 
-def merge(left, right):
-  result = []
+    # Merge the sorted left and right lists with two pointers
+    while left_pointer < midpoint or right_pointer < n - midpoint:
+        if left_pointer == midpoint:
+            # If left list is empty, append element from right
+            result_list.append(right_list[right_pointer])
+            right_pointer += 1
+        elif right_pointer == n - midpoint:
+            # If right list is empty, append element from left
+            result_list.append(left_list[left_pointer])
+            left_pointer += 1
+        elif left_list[left_pointer] <= right_list[right_pointer]:
+            # Append smaller element from left
+            result_list.append(left_list[left_pointer])
+            left_pointer += 1
+        else:  # Append smaller element from right
+            result_list.append(right_list[right_pointer])
+            right_pointer += 1
 
-  while (left and right):
-    if left[0] < right[0]:
-      result.append(left[0])
-      left.pop(0)
-    else:
-      result.append(right[0])
-      right.pop(0)
-
-  if left:
-    result += left
-  if right:
-    result += right
-
-  return result
-
-
+    return result_list
